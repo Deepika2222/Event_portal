@@ -3,48 +3,87 @@
 {% block title %}All Events - Event Portal{% endblock %}
 
 {% block content %}
-<div class="page-header">
+<section class="hero hero--primary page-hero">
     <h1>📅 All Events</h1>
-    <p>Explore all available events and find something you're interested in</p>
-</div>
+    <p class="hero-subtitle">Explore upcoming sessions, workshops, and hackathons curated by campus clubs.</p>
+</section>
 
 {% if events %}
-<div class="table-container">
-    <table>
-        <thead>
-            <tr>
-                <th>event_id</th>
-                <th>Name</th>
-                <th>Date</th>
-                <th>Venue</th>
-                <th>max_seats</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for e in events %}
-            <tr>
-                <td>#{{ e.event_id }}</td>
-                <td><strong>{{ e.name }}</strong></td>
-                <td>{{ e.date if e.date else 'TBD' }}</td>
-                <td>{{ e.venue if e.venue else 'N/A' }}</td>
-                <td><span class="badge">{{ e.max_seats if e.max_seats else 'Unlimited' }}</span></td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+<section class="stats-grid stats-grid--compact">
+    <article class="stat-card">
+        <span>Total events</span>
+        <strong>{{ stats.total_events }}</strong>
+        <p>Across departments</p>
+    </article>
+    <article class="stat-card">
+        <span>Upcoming</span>
+        <strong>{{ stats.upcoming or 0 }}</strong>
+        <p>Still open for RSVP</p>
+    </article>
+    <article class="stat-card">
+        <span>Registered seats</span>
+        <strong>{{ stats.total_registrations }}</strong>
+        <p>Students confirmed</p>
+    </article>
+    <article class="stat-card">
+        <span>Overall capacity</span>
+        <strong>{{ stats.total_capacity or '∞' }}</strong>
+        <p>{{ stats.avg_fill }}% booked</p>
+    </article>
+</section>
 
-<div class="btn-group mt-4" style="justify-content: center;">
-    <a href="/register" class="btn btn-primary">Register for an Event</a>
-    <a href="/" class="btn btn-secondary">Back to Home</a>
-</div>
+<section class="event-grid">
+    {% for e in events %}
+    <article class="event-card {% if e.status == 'Full' %}is-full{% endif %}">
+        <div class="event-card__tags">
+            <span class="event-chip">#{{ loop.index }}</span>
+            <span class="status-pill {{ e.status | lower }}">{{ 'Seats open' if e.status == 'Open' else 'Full' }}</span>
+        </div>
+        <header class="event-card__header">
+            <div>
+                <h3>{{ e.name }}</h3>
+                {% if e.description %}
+                <p class="event-description">{{ e.description }}</p>
+                {% endif %}
+            </div>
+        </header>
+
+        <ul class="event-info">
+            <li><span>📅</span> {{ e.date or 'TBD' }}</li>
+            <li><span>⏰</span> {{ e.time or '—' }}</li>
+            <li><span>📍</span> {{ e.venue or 'Venue TBA' }}</li>
+            <li><span>👥</span> {{ e.organizer or 'N/A' }}</li>
+        </ul>
+
+        <div class="capacity-card">
+            <div class="capacity-top">
+                <p>{{ e.registered_count }} / {{ e.max_seats or 'Unlimited' }} seats</p>
+                <span>{{ e.fill_percent }}%</span>
+            </div>
+            <div class="capacity-progress">
+                <div class="capacity-progress__bar" style="--fill-percent: {{ e.fill_percent }}%"></div>
+            </div>
+        </div>
+
+        <div class="card-actions">
+            <a href="/register?event_id={{ e.event_id }}" class="btn btn-primary {% if e.status == 'Full' %}disabled{% endif %}"
+                {% if e.status == 'Full' %}aria-disabled="true" tabindex="-1"{% endif %}>
+                Register
+            </a>
+            <a href="/feedback" class="btn btn-secondary">Feedback</a>
+        </div>
+    </article>
+    {% endfor %}
+</section>
+
 {% else %}
-<div class="alert alert-info">
-    <p>No events available at the moment. Please check back later!</p>
-</div>
-<div style="text-align: center; margin-top: 2rem;">
-    <a href="/" class="btn btn-primary">Back to Home</a>
+<div class="empty-state">
+    <h3>No events scheduled</h3>
+    <p>Check back soon or create a new event to get started.</p>
+    <div class="btn-group">
+        <a href="/" class="btn btn-primary">Back to home</a>
+        <a href="/register" class="btn btn-secondary">Register interest</a>
+    </div>
 </div>
 {% endif %}
-
 {% endblock %}

@@ -3,72 +3,109 @@
 {% block title %}Submit Feedback - Event Portal{% endblock %}
 
 {% block content %}
-<div class="page-header">
+<section class="hero hero--primary page-hero">
     <h1>⭐ Submit Feedback</h1>
-    <p>Help us improve by sharing your experience and rating</p>
-</div>
+    <p class="hero-subtitle">Help us improve by sharing your experience and rating.</p>
+</section>
 
-{% if error %}
-<div class="alert alert-danger">
-    {{ error }}
-</div>
-{% endif %}
-
-<div class="form-card">
-    <form method="POST" id="feedbackForm">
-        <div class="form-group">
-            <label for="event_id">Event *</label>
-            <select id="event_id" name="event_id" required>
-                <option value="">-- Choose an event --</option>
-                {% for e in events %}
-                <option value="{{ e.event_id }}">{{ e.event_name }}</option>
-                {% endfor %}
-            </select>
-        </div>
-
-        <div class="form-group">
-            <label for="usn">USN (University Seat Number) *</label>
-            <input type="text" id="usn" name="usn" placeholder="E.g., 1SI21CS101" pattern="^[A-Z0-9]{10}$"
-                minlength="10" maxlength="10" required>
-            <small class="text-muted">Format: 10 alphanumeric characters (e.g., 1SI21CS101)</small>
-        </div>
-
-        <div class="form-group">
-            <label for="rating">Rating (1–5) *</label>
-            <div style="display: flex; gap: 1rem; align-items: center;">
-                <input type="number" id="rating" name="rating" min="1" max="5" value="5" required style="width: 80px;">
-                <span id="ratingStars" style="font-size: 1.5rem;">⭐⭐⭐⭐⭐</span>
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{% if category == 'error' %}danger{% else %}success{% endif %}">
+                {{ message }}
             </div>
-            <small class="text-muted">1 = Poor, 5 = Excellent</small>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
+
+<section class="form-layout">
+    <aside class="info-panel">
+        <article class="info-card">
+            <p class="eyebrow">Feedback tips</p>
+            <h3>Call out what stood out</h3>
+            <ul class="bulleted-list">
+                <li>Spotlight speakers or sessions that impressed.</li>
+                <li>Highlight logistics that worked—or didn’t.</li>
+                <li>Suggest themes you’d love to see next.</li>
+            </ul>
+        </article>
+
+        <article class="info-card">
+            <p class="eyebrow">Why it matters</p>
+            <p>Every rating is shared with organizers within 24 hours so they can act on insights before the next event
+                begins.</p>
+            <div class="callout">
+                <strong>Need help?</strong>
+                <p>Email <a href="mailto:events@campus.edu">events@campus.edu</a> with urgent issues.</p>
+            </div>
+        </article>
+    </aside>
+
+    <div class="form-card form-card--elevated">
+        <div class="form-card__header">
+            <div>
+                <p class="eyebrow">Feedback form</p>
+                <h2>Capture the highlights</h2>
+            </div>
+            <div class="rating-preview">
+                <span id="ratingStars" aria-live="polite">⭐⭐⭐⭐⭐</span>
+                <small>Live preview</small>
+            </div>
         </div>
 
-        <div class="form-group">
-            <label for="comment">Comment (Optional)</label>
-            <textarea id="comment" name="comment" placeholder="Share your experience, suggestions, or comments..."
-                maxlength="500"></textarea>
-            <small class="text-muted">
-                <span id="charCount">0</span>/500 characters
-            </small>
-        </div>
+        <form method="POST" id="feedbackForm" class="stacked-form">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="event_id">Event *</label>
+                    <select id="event_id" name="event_id" required>
+                        <option value="">-- Choose an event --</option>
+                        {% for e in events %}
+                        <option value="{{ e.event_id }}">{{ e.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
 
-        <div class="btn-group">
-            <button type="submit" class="btn btn-success btn-block">Submit Feedback</button>
-            <a href="/events" class="btn btn-secondary">Cancel</a>
-        </div>
-    </form>
-</div>
+                <div class="form-group">
+                    <label for="usn">USN / Student ID *</label>
+                    <input type="text" id="usn" name="usn" placeholder="Enter numeric USN" pattern="^[0-9]+$"
+                        required>
+                    <small class="text-muted">Use the numeric USN stored in the student table.</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="rating">Rating (1–5) *</label>
+                <div class="rating-control">
+                    <input type="range" id="rating" name="rating" min="1" max="5" value="5" required>
+                    <span class="rating-value" id="ratingValue">5</span>
+                </div>
+                <small class="text-muted">Drag the slider or use arrow keys. 1 = Poor, 5 = Excellent.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="comment">Comment (Optional)</label>
+                <textarea id="comment" name="comment" placeholder="Share your experience, suggestions, or comments..."
+                    maxlength="500"></textarea>
+                <small class="text-muted">
+                    <span id="charCount">0</span>/500 characters
+                </small>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-success btn-block">Submit Feedback</button>
+                <a href="/events" class="btn btn-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</section>
 
 <script>
-    // Auto-convert USN to uppercase
-    document.getElementById('usn').addEventListener('input', function () {
-        this.value = this.value.toUpperCase();
-    });
-
     // Update star rating display
     document.getElementById('rating').addEventListener('input', function () {
         const rating = parseInt(this.value);
         const stars = '⭐'.repeat(rating) + '☆'.repeat(5 - rating);
         document.getElementById('ratingStars').textContent = stars;
+        document.getElementById('ratingValue').textContent = rating;
     });
 
     // Update character count
@@ -81,8 +118,8 @@
         const usn = document.getElementById('usn').value;
         const rating = document.getElementById('rating').value;
 
-        if (!usn.match(/^[A-Z0-9]{10}$/)) {
-            alert('USN must be exactly 10 alphanumeric characters');
+        if (!usn.match(/^[0-9]+$/)) {
+            alert('USN must be numeric to match the student record');
             e.preventDefault();
             return false;
         }

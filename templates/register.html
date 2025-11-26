@@ -3,55 +3,104 @@
 {% block title %}Register for Event - Event Portal{% endblock %}
 
 {% block content %}
-<div class="page-header">
+<section class="hero hero--primary page-hero">
     <h1>✍️ Register for an Event</h1>
-    <p>Fill in the form below to register for your desired event</p>
-</div>
+    <p class="hero-subtitle">Fill in the form below to register for your desired event.</p>
+</section>
 
-{% if error %}
-<div class="alert alert-danger">
-    {{ error }}
-</div>
-{% endif %}
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        {% for category, message in messages %}
+            <div class="alert alert-{% if category == 'error' %}danger{% else %}success{% endif %}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endif %}
+{% endwith %}
 
-<div class="form-card">
-    <form method="POST" id="registerForm">
-        <div class="form-group">
-            <label for="reg_id">Registration ID *</label>
-            <input type="text" id="reg_id" name="reg_id" placeholder="Enter your registration ID (numbers only)"
-                pattern="^[0-9]+$" required>
-            <small class="text-muted">Must contain only numbers</small>
+<section class="form-layout">
+    <aside class="info-panel">
+        <article class="info-card">
+            <p class="eyebrow">How it works</p>
+            <h3>3 steps to book your seat</h3>
+            <ol>
+                <li>Reserve a unique registration ID.</li>
+                <li>Pick the event you want to attend.</li>
+                <li>Confirm with your student ID—done!</li>
+            </ol>
+        </article>
+
+        <article class="info-card">
+            <p class="eyebrow">Trending events</p>
+            <ul class="event-mini-list">
+                {% if events %}
+                    {% for e in events[:3] %}
+                    <li>
+                        <div>
+                            <strong>{{ e.name }}</strong>
+                            <p>{{ e.date or 'TBD' }} · {{ e.venue or 'Venue TBA' }}</p>
+                        </div>
+                        <span class="pill pill-outline">ID #{{ e.event_id }}</span>
+                    </li>
+                    {% endfor %}
+                {% else %}
+                    <li>No events available right now. Check back soon!</li>
+                {% endif %}
+            </ul>
+        </article>
+    </aside>
+
+    <div class="form-card form-card--elevated">
+        <div class="form-card__header">
+            <div>
+                <p class="eyebrow">Registration form</p>
+                <h2>Secure your seat</h2>
+            </div>
+            <span class="pill pill-soft">Takes 60 seconds</span>
         </div>
 
-        <div class="form-group">
-            <label for="event_id">Select Event *</label>
-            <select id="event_id" name="event_id" required>
-                <option value="">-- Choose an event --</option>
-                {% for e in events %}
-                <option value="{{ e.event_id }}">{{ e.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
+        <form method="POST" id="registerForm" class="stacked-form">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="reg_id">Registration ID *</label>
+                    <input type="text" id="reg_id" name="reg_id" placeholder="E.g. 12015"
+                        pattern="^[0-9]+$" required>
+                    <small class="text-muted">Numbers only, must be unique.</small>
+                </div>
 
-        <div class="form-group">
-            <label for="usn">USN (University Seat Number) *</label>
-            <input type="text" id="usn" name="usn" placeholder="E.g., 1234567890
- pattern=" ^[A-Z0-9]{10}$" minlength="10" maxlength="10" required>
-            <small class="text-muted">Format: 10 alphanumeric characters (e.g., 1SI21CS101)</small>
-        </div>
+                <div class="form-group">
+                    <label for="event_id">Select Event *</label>
+                    <select id="event_id" name="event_id" required>
+                        <option value="">-- Choose an event --</option>
+                        {% for e in events %}
+                        <option value="{{ e.event_id }}">
+                            {{ e.name }} {% if e.date %}• {{ e.date }}{% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </div>
 
-        <div class="btn-group">
-            <button type="submit" class="btn btn-success btn-block">Register Now</button>
-            <a href="/events" class="btn btn-secondary">View All Events</a>
-        </div>
-    </form>
-</div>
+            <div class="form-group">
+                <label for="usn">USN / Student ID *</label>
+                <input type="text" id="usn" name="usn" placeholder="Enter numeric USN" pattern="^[0-9]+$" required>
+                <small class="text-muted">Must match the numeric USN stored in the student table.</small>
+            </div>
+
+            <div class="form-hint">
+                <h4>Need a reminder?</h4>
+                <p>Your USN can be found on your student profile. Seats are assigned on a first-come basis.</p>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-success btn-block">Register Now</button>
+                <a href="/events" class="btn btn-secondary">View All Events</a>
+            </div>
+        </form>
+    </div>
+</section>
 
 <script>
-    document.getElementById('usn').addEventListener('input', function () {
-        this.value = this.value.toUpperCase();
-    });
-
     document.getElementById('registerForm').addEventListener('submit', function (e) {
         const regId = document.getElementById('reg_id').value;
         const usn = document.getElementById('usn').value;
@@ -62,8 +111,8 @@
             return false;
         }
 
-        if (!usn.match(/^[A-Z0-9]{10}$/)) {
-            alert('USN must be exactly 10 alphanumeric characters');
+        if (!usn.match(/^[0-9]+$/)) {
+            alert('USN must be numeric to match the student table');
             e.preventDefault();
             return false;
         }

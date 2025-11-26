@@ -3,40 +3,91 @@
 {% block title %}Home - Event Portal{% endblock %}
 
 {% block content %}
-<div class="home-hero">
-    <h1>Welcome to Event Portal</h1>
-    <p>Manage and participate in events effortlessly</p>
-</div>
+<section class="hero hero--primary">
+    <p class="hero-badge">Trusted by 5+ events across campus</p>
+    <h1>Plan, register, and celebrate every event in one place.</h1>
+    <p class="hero-subtitle">
+        Discover curated experiences, reserve seats in seconds, and keep the conversation going with lightning-fast
+        feedback loops.
+    </p>
+    <div class="hero-actions">
+        <div class="hero-buttons">
+            <a href="/events" class="btn btn-white">Browse Events</a>
+            <a href="/register" class="btn btn-outline">Quick Register</a>
+        </div>
+        <p class="hero-note">Looking to improve an event? <a href="/feedback">Share feedback →</a></p>
+    </div>
+</section>
 
-<div class="features-grid">
-    <div class="feature-card">
-        <div class="icon">📋</div>
-        <h3>View Events</h3>
-        <p>Browse all upcoming events with detailed information</p>
-        <a href="/events" class="btn btn-primary mt-2">View Events</a>
+<section class="stats-grid">
+    <article class="stat-card">
+        <span>Upcoming events</span>
+        <strong>{{ stats.upcoming or 0 }}</strong>
+        <p>Ready to RSVP</p>
+    </article>
+    <article class="stat-card">
+        <span>Total registrations</span>
+        <strong>{{ stats.total_registrations or 0 }}</strong>
+        <p>Seats reserved so far</p>
+    </article>
+    <article class="stat-card">
+        <span>Average rating</span>
+        <strong>{{ stats.average_rating or '—' }}</strong>
+        <p>Based on submitted feedback</p>
+    </article>
+    <article class="stat-card">
+        <span>Live features</span>
+        <strong>3</strong>
+        <p>Browse • Register • Feedback</p>
+    </article>
+</section>
+
+<section class="feature-stack">
+    <div class="feature-list">
+        <article class="feature-tile">
+            <div>
+                <h3>Curated events board</h3>
+                <p>Filter by department, organizer, or seat availability with a single glance.</p>
+            </div>
+            <a href="/events">Explore</a>
+        </article>
+        <article class="feature-tile">
+            <div>
+                <h3>Frictionless registration</h3>
+                <p>Smart validation keeps data clean while instant confirmations land right in your inbox.</p>
+            </div>
+            <a href="/register">Get started</a>
+        </article>
+        <article class="feature-tile">
+            <div>
+                <h3>Insightful feedback loops</h3>
+                <p>Collect meaningful ratings to iterate on agendas, speakers, and engagement tactics.</p>
+            </div>
+            <a href="/feedback">Contribute</a>
+        </article>
     </div>
 
-    <div class="feature-card">
-        <div class="icon">✍️</div>
-        <h3>Register</h3>
-        <p>Register for events that interest you</p>
-        <a href="/register" class="btn btn-primary mt-2">Register Now</a>
-    </div>
+    <div class="spotlight-column">
+        <article class="spotlight-card">
+            <p class="eyebrow">Upcoming spotlight</p>
+            <h4>Next on the calendar</h4>
+            <p>No upcoming events have been scheduled yet. Check back soon!</p>
+            <a href="/events">View all</a>
+        </article>
 
-    <div class="feature-card">
-        <div class="icon">⭐</div>
-        <h3>Give Feedback</h3>
-        <p>Share your experience and rate events</p>
-        <a href="/feedback" class="btn btn-primary mt-2">Submit Feedback</a>
+        <article class="testimonial-card">
+            <p>“Registration used to take days of manual processing. With Event Portal, we fill every seat and capture
+                feedback before the room even cools down.”</p>
+            <span>— Faculty Events Team</span>
+        </article>
     </div>
-</div>
+</section>
 
-<div class="card mt-4">
-    <div class="card-body">
-        <h2 class="card-title">About Event Portal</h2>
-        <p class="card-text">Event Portal is a comprehensive platform for managing college events. Whether you want to
-            discover new events, register for ones you're interested in, or provide feedback after attending, our
-            platform makes it easy and convenient.</p>
-    </div>
-</div>
+<section class="about-panel">
+    <article>
+        <h2>Built for student communities</h2>
+        <p>Event Portal streamlines every touch point—from discovery to registration and the final survey—so your focus
+            stays on crafting memorable experiences.</p>
+    </article>
+</section>
 {% endblock %}

@@ -43,13 +43,15 @@ INSERT INTO event VALUES(3, 'Hackathon', '24-hour coding challenge', '2025-03-20
 INSERT INTO event VALUES(4, 'Data Science Seminar', 'Exploring data science techniques', '2025-04-05', '11:00:00', 'Conference Room', 'Data Club', 80);
 
 INSERT INTO event VALUES(5, 'Cybersecurity Workshop', 'Basics of cybersecurity practices', '2025-05-12', '15:00:00', 'Lab 3', 'Security Team', 50);
+
+
 INSERT INTO student VALUES('11', 'Deepika',  'CSE', 'deepika@example.com', '9876543210');
-
 INSERT INTO student VALUES('12', 'Arun Kumar',  'CSE', 'arun@example.com', '9876501234');
-
 INSERT INTO student VALUES('13', 'Meera R', 'IT', 'meera@example.com', '9087654321');
+INSERT INTO student VALUES('14', 'Rahul Singh', 'ECE', 'rahul@example.com', '9988776655');
 
--- INSERT INTO student VALUES('14', 'Rahul Singh', 'ECE', 'rahul@example.com', '9988776655');
+
+
 INSERT INTO registration VALUES (101, 1, 11, '2025-01-10 10:30:00');
 
 INSERT INTO registration VALUES (102, 1, 12, '2025-01-10 11:00:00');

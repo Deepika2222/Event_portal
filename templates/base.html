@@ -2,39 +2,35 @@
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Event Portal{% endblock %}</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{% block title %}Event Portal{% endblock %}</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="navbar-container">
-            <a href="/" class="navbar-brand">Event Portal</a>
-            <ul class="navbar-links">
-                <li><a href="/">Home</a></li>
-                <li><a href="/events">Events</a></li>
-                <li><a href="/register">Register</a></li>
-                <li><a href="/feedback">Feedback</a></li>
-            </ul>
-        </div>
-    </nav>
+	<nav class="navbar">
+		<div class="navbar-container">
+			<a href="/" class="navbar-brand">Event Portal</a>
+			<ul class="navbar-links">
+				<li><a href="/" class="{% if request.path == '/' %}active{% endif %}">Home</a></li>
+				<li><a href="/events" class="{% if request.path.startswith('/events') %}active{% endif %}">Events</a></li>
+				<li><a href="/register" class="{% if request.path.startswith('/register') %}active{% endif %}">Register</a></li>
+				<li><a href="/feedback" class="{% if request.path.startswith('/feedback') %}active{% endif %}">Feedback</a></li>
+			</ul>
+		</div>
+	</nav>
 
-    <!-- Main Content -->
-    <div class="container">
-        {% block content %}{% endblock %}
-    </div>
+	<main class="container">
+		{% block content %}{% endblock %}
+	</main>
 
-    <!-- Footer -->
-    <footer>
-        <p>&copy; 2024 Event Portal Management System</p>
-        <p>All rights reserved.</p>
-    </footer>
+	<footer>
+		<p>© {{ current_year | default(2025) }} Event Portal. Crafted with care.</p>
+		<p>Need help? Reach out to the events desk.</p>
+	</footer>
 </body>
 
 </html>

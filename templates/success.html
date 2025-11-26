@@ -3,16 +3,31 @@
 {% block title %}Success - Event Portal{% endblock %}
 
 {% block content %}
-<div class="success-container">
-    <div class="success-icon">✓</div>
-    <h1 style="color: #28a745; margin-bottom: 1rem;">Success!</h1>
-    <p class="success-message">{{ message }}</p>
-    
-    <div class="btn-group" style="justify-content: center;">
-        {% if link_url and link_text %}
-            <a href="{{ link_url }}" class="btn btn-primary">{{ link_text }}</a>
-        {% endif %}
-        <a href="/" class="btn btn-secondary">Back to Home</a>
+<section class="success-shell">
+    <div class="success-card">
+        <div class="success-card__icon" aria-hidden="true">✅</div>
+        <div class="success-card__body">
+            <p class="eyebrow">Status update</p>
+            <h1>Success!</h1>
+            <p class="success-message">{{ message }}</p>
+
+            <div class="success-next">
+                <h4>What happens now?</h4>
+                <ul>
+                    <li>We’ve logged your submission in the dashboard.</li>
+                    <li>You’ll receive an email if organizers need more info.</li>
+                    <li>Feel free to browse upcoming events while you wait.</li>
+                </ul>
+            </div>
+
+            <div class="btn-group">
+                {% if link_url and link_text %}
+                <a href="{{ link_url }}" class="btn btn-primary">{{ link_text }}</a>
+                {% endif %}
+                <a href="/events" class="btn btn-secondary">Explore Events</a>
+                <a href="/" class="btn btn-ghost">Back to Home</a>
+            </div>
+        </div>
     </div>
-</div>
+</section>
 {% endblock %}

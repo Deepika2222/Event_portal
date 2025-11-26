@@ -21,7 +21,9 @@ DB_CONFIG = {
     "user": "root",
     "password": "dbms@2007",
     "database": "event_portal",
-    "autocommit": False,ls -a
+    "autocommit": False
+}
+
 
 
 

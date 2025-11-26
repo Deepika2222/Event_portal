@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+
+{% block title %}Submit Feedback - Event Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>⭐ Submit Feedback</h1>
+    <p>Help us improve by sharing your experience and rating</p>
+</div>
+
+{% if error %}
+<div class="alert alert-danger">
+    {{ error }}
+</div>
+{% endif %}
+
+<div class="form-card">
+    <form method="POST" id="feedbackForm">
+        <div class="form-group">
+            <label for="event_id">Event *</label>
+            <select id="event_id" name="event_id" required>
+                <option value="">-- Choose an event --</option>
+                {% for e in events %}
+                <option value="{{ e.event_id }}">{{ e.event_name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="usn">USN (University Seat Number) *</label>
+            <input type="text" id="usn" name="usn" placeholder="E.g., 1SI21CS101" pattern="^[A-Z0-9]{10}$"
+                minlength="10" maxlength="10" required>
+            <small class="text-muted">Format: 10 alphanumeric characters (e.g., 1SI21CS101)</small>
+        </div>
+
+        <div class="form-group">
+            <label for="rating">Rating (1–5) *</label>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <input type="number" id="rating" name="rating" min="1" max="5" value="5" required style="width: 80px;">
+                <span id="ratingStars" style="font-size: 1.5rem;">⭐⭐⭐⭐⭐</span>
+            </div>
+            <small class="text-muted">1 = Poor, 5 = Excellent</small>
+        </div>
+
+        <div class="form-group">
+            <label for="comment">Comment (Optional)</label>
+            <textarea id="comment" name="comment" placeholder="Share your experience, suggestions, or comments..."
+                maxlength="500"></textarea>
+            <small class="text-muted">
+                <span id="charCount">0</span>/500 characters
+            </small>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-success btn-block">Submit Feedback</button>
+            <a href="/events" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    // Auto-convert USN to uppercase
+    document.getElementById('usn').addEventListener('input', function () {
+        this.value = this.value.toUpperCase();
+    });
+
+    // Update star rating display
+    document.getElementById('rating').addEventListener('input', function () {
+        const rating = parseInt(this.value);
+        const stars = '⭐'.repeat(rating) + '☆'.repeat(5 - rating);
+        document.getElementById('ratingStars').textContent = stars;
+    });
+
+    // Update character count
+    document.getElementById('comment').addEventListener('input', function () {
+        document.getElementById('charCount').textContent = this.value.length;
+    });
+
+    // Form validation
+    document.getElementById('feedbackForm').addEventListener('submit', function (e) {
+        const usn = document.getElementById('usn').value;
+        const rating = document.getElementById('rating').value;
+
+        if (!usn.match(/^[A-Z0-9]{10}$/)) {
+            alert('USN must be exactly 10 alphanumeric characters');
+            e.preventDefault();
+            return false;
+        }
+
+        if (rating < 1 || rating > 5) {
+            alert('Rating must be between 1 and 5');
+            e.preventDefault();
+            return false;
+        }
+    });
+</script>
+{% endblock %}

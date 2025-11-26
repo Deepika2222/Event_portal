@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+
+{% block title %}All Events - Event Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>📅 All Events</h1>
+    <p>Explore all available events and find something you're interested in</p>
+</div>
+
+{% if events %}
+<div class="table-container">
+    <table>
+        <thead>
+            <tr>
+                <th>event_id</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Venue</th>
+                <th>max_seats</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for e in events %}
+            <tr>
+                <td>#{{ e.event_id }}</td>
+                <td><strong>{{ e.name }}</strong></td>
+                <td>{{ e.date if e.date else 'TBD' }}</td>
+                <td>{{ e.venue if e.venue else 'N/A' }}</td>
+                <td><span class="badge">{{ e.max_seats if e.max_seats else 'Unlimited' }}</span></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<div class="btn-group mt-4" style="justify-content: center;">
+    <a href="/register" class="btn btn-primary">Register for an Event</a>
+    <a href="/" class="btn btn-secondary">Back to Home</a>
+</div>
+{% else %}
+<div class="alert alert-info">
+    <p>No events available at the moment. Please check back later!</p>
+</div>
+<div style="text-align: center; margin-top: 2rem;">
+    <a href="/" class="btn btn-primary">Back to Home</a>
+</div>
+{% endif %}
+
+{% endblock %}

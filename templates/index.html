@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}Home - Event Portal{% endblock %}
+
+{% block content %}
+<div class="home-hero">
+    <h1>Welcome to Event Portal</h1>
+    <p>Manage and participate in events effortlessly</p>
+</div>
+
+<div class="features-grid">
+    <div class="feature-card">
+        <div class="icon">📋</div>
+        <h3>View Events</h3>
+        <p>Browse all upcoming events with detailed information</p>
+        <a href="/events" class="btn btn-primary mt-2">View Events</a>
+    </div>
+
+    <div class="feature-card">
+        <div class="icon">✍️</div>
+        <h3>Register</h3>
+        <p>Register for events that interest you</p>
+        <a href="/register" class="btn btn-primary mt-2">Register Now</a>
+    </div>
+
+    <div class="feature-card">
+        <div class="icon">⭐</div>
+        <h3>Give Feedback</h3>
+        <p>Share your experience and rate events</p>
+        <a href="/feedback" class="btn btn-primary mt-2">Submit Feedback</a>
+    </div>
+</div>
+
+<div class="card mt-4">
+    <div class="card-body">
+        <h2 class="card-title">About Event Portal</h2>
+        <p class="card-text">Event Portal is a comprehensive platform for managing college events. Whether you want to
+            discover new events, register for ones you're interested in, or provide feedback after attending, our
+            platform makes it easy and convenient.</p>
+    </div>
+</div>
+{% endblock %}

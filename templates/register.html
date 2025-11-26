@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Register for Event - Event Portal{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>✍️ Register for an Event</h1>
+    <p>Fill in the form below to register for your desired event</p>
+</div>
+
+{% if error %}
+<div class="alert alert-danger">
+    {{ error }}
+</div>
+{% endif %}
+
+<div class="form-card">
+    <form method="POST" id="registerForm">
+        <div class="form-group">
+            <label for="reg_id">Registration ID *</label>
+            <input type="text" id="reg_id" name="reg_id" placeholder="Enter your registration ID (numbers only)"
+                pattern="^[0-9]+$" required>
+            <small class="text-muted">Must contain only numbers</small>
+        </div>
+
+        <div class="form-group">
+            <label for="event_id">Select Event *</label>
+            <select id="event_id" name="event_id" required>
+                <option value="">-- Choose an event --</option>
+                {% for e in events %}
+                <option value="{{ e.event_id }}">{{ e.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="usn">USN (University Seat Number) *</label>
+            <input type="text" id="usn" name="usn" placeholder="E.g., 1234567890
+ pattern=" ^[A-Z0-9]{10}$" minlength="10" maxlength="10" required>
+            <small class="text-muted">Format: 10 alphanumeric characters (e.g., 1SI21CS101)</small>
+        </div>
+
+        <div class="btn-group">
+            <button type="submit" class="btn btn-success btn-block">Register Now</button>
+            <a href="/events" class="btn btn-secondary">View All Events</a>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('usn').addEventListener('input', function () {
+        this.value = this.value.toUpperCase();
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', function (e) {
+        const regId = document.getElementById('reg_id').value;
+        const usn = document.getElementById('usn').value;
+
+        if (!regId.match(/^[0-9]+$/)) {
+            alert('Registration ID must contain only numbers');
+            e.preventDefault();
+            return false;
+        }
+
+        if (!usn.match(/^[A-Z0-9]{10}$/)) {
+            alert('USN must be exactly 10 alphanumeric characters');
+            e.preventDefault();
+            return false;
+        }
+    });
+</script>
+{% endblock %}

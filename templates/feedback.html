@@ -19,28 +19,6 @@
 {% endwith %}
 
 <section class="form-layout">
-    <aside class="info-panel">
-        <article class="info-card">
-            <p class="eyebrow">Feedback tips</p>
-            <h3>Call out what stood out</h3>
-            <ul class="bulleted-list">
-                <li>Spotlight speakers or sessions that impressed.</li>
-                <li>Highlight logistics that worked—or didn’t.</li>
-                <li>Suggest themes you’d love to see next.</li>
-            </ul>
-        </article>
-
-        <article class="info-card">
-            <p class="eyebrow">Why it matters</p>
-            <p>Every rating is shared with organizers within 24 hours so they can act on insights before the next event
-                begins.</p>
-            <div class="callout">
-                <strong>Need help?</strong>
-                <p>Email <a href="mailto:events@campus.edu">events@campus.edu</a> with urgent issues.</p>
-            </div>
-        </article>
-    </aside>
-
     <div class="form-card form-card--elevated">
         <div class="form-card__header">
             <div>
@@ -76,10 +54,14 @@
             <div class="form-group">
                 <label for="rating">Rating (1–5) *</label>
                 <div class="rating-control">
-                    <input type="range" id="rating" name="rating" min="1" max="5" value="5" required>
+                    <select id="rating" name="rating" required>
+                        {% for score in range(1, 6) %}
+                        <option value="{{ score }}" {% if score == 5 %}selected{% endif %}>{{ score }}</option>
+                        {% endfor %}
+                    </select>
                     <span class="rating-value" id="ratingValue">5</span>
                 </div>
-                <small class="text-muted">Drag the slider or use arrow keys. 1 = Poor, 5 = Excellent.</small>
+                <small class="text-muted">1 = Needs improvement · 5 = Outstanding experience</small>
             </div>
 
             <div class="form-group">
@@ -97,11 +79,38 @@
             </div>
         </form>
     </div>
+
+    <aside class="info-panel">
+        <article class="info-card">
+            <p class="eyebrow">Feedback tips</p>
+            <h3>Call out what stood out</h3>
+            <ul class="bulleted-list">
+                <li>Spotlight speakers or sessions that impressed.</li>
+                <li>Highlight logistics that worked—or didn’t.</li>
+                <li>Suggest themes you’d love to see next.</li>
+            </ul>
+        </article>
+
+        <article class="info-card">
+            <p class="eyebrow">Why it matters</p>
+            <p>Every rating is shared with organizers within 24 hours so they can act on insights before the next event
+                begins.</p>
+            <div class="tag-row">
+                <span class="pill pill-outline">Faster improvements</span>
+                <span class="pill pill-outline">Better speakers</span>
+                <span class="pill pill-outline">Smarter logistics</span>
+            </div>
+            <div class="callout">
+                <strong>Need help?</strong>
+                <p>Email <a href="mailto:events@campus.edu">events@campus.edu</a> with urgent issues.</p>
+            </div>
+        </article>
+    </aside>
 </section>
 
 <script>
     // Update star rating display
-    document.getElementById('rating').addEventListener('input', function () {
+    document.getElementById('rating').addEventListener('change', function () {
         const rating = parseInt(this.value);
         const stars = '⭐'.repeat(rating) + '☆'.repeat(5 - rating);
         document.getElementById('ratingStars').textContent = stars;
@@ -116,7 +125,7 @@
     // Form validation
     document.getElementById('feedbackForm').addEventListener('submit', function (e) {
         const usn = document.getElementById('usn').value;
-        const rating = document.getElementById('rating').value;
+        const rating = parseInt(document.getElementById('rating').value, 10);
 
         if (!usn.match(/^[0-9]+$/)) {
             alert('USN must be numeric to match the student record');

@@ -19,6 +19,56 @@
 {% endwith %}
 
 <section class="form-layout">
+    <div class="form-card form-card--elevated">
+        <div class="form-card__header">
+            <div>
+                <p class="eyebrow">Registration form</p>
+                <h2>Secure your seat</h2>
+            </div>
+            <span class="pill pill-soft">Takes 60 seconds</span>
+        </div>
+
+        <form method="POST" id="registerForm" class="stacked-form">
+            <div class="form-grid">
+                <div class="form-group">
+                    <label for="reg_id">Registration ID *</label>
+                    <input type="text" id="reg_id" name="reg_id" placeholder="E.g. 12015"
+                        pattern="^[0-9]+$" required>
+                    <small class="text-muted">Numbers only, must be unique.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="event_id">Select Event *</label>
+                    <select id="event_id" name="event_id" required>
+                        <option value="">-- Choose an event --</option>
+                        {% for e in events %}
+                        <option value="{{ e.event_id }}">
+                            {{ e.name }} {% if e.date %}• {{ e.date }}{% endif %}
+                        </option>
+                        {% endfor %}
+                    </select>
+                    <small class="tip-text">Tip: seats fill up fast—pick your slot soon.</small>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="usn">USN / Student ID *</label>
+                <input type="text" id="usn" name="usn" placeholder="Enter numeric USN" pattern="^[0-9]+$" required>
+                <small class="text-muted">Must match the numeric USN stored in the student table.</small>
+            </div>
+
+            <div class="form-hint">
+                <h4>Need a reminder?</h4>
+                <p>Your USN can be found on your student profile. Seats are assigned on a first-come basis.</p>
+            </div>
+
+            <div class="btn-group">
+                <button type="submit" class="btn btn-success btn-block">Register Now</button>
+                <a href="/events" class="btn btn-secondary">View All Events</a>
+            </div>
+        </form>
+    </div>
+
     <aside class="info-panel">
         <article class="info-card">
             <p class="eyebrow">How it works</p>
@@ -49,55 +99,6 @@
             </ul>
         </article>
     </aside>
-
-    <div class="form-card form-card--elevated">
-        <div class="form-card__header">
-            <div>
-                <p class="eyebrow">Registration form</p>
-                <h2>Secure your seat</h2>
-            </div>
-            <span class="pill pill-soft">Takes 60 seconds</span>
-        </div>
-
-        <form method="POST" id="registerForm" class="stacked-form">
-            <div class="form-grid">
-                <div class="form-group">
-                    <label for="reg_id">Registration ID *</label>
-                    <input type="text" id="reg_id" name="reg_id" placeholder="E.g. 12015"
-                        pattern="^[0-9]+$" required>
-                    <small class="text-muted">Numbers only, must be unique.</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="event_id">Select Event *</label>
-                    <select id="event_id" name="event_id" required>
-                        <option value="">-- Choose an event --</option>
-                        {% for e in events %}
-                        <option value="{{ e.event_id }}">
-                            {{ e.name }} {% if e.date %}• {{ e.date }}{% endif %}
-                        </option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-
-            <div class="form-group">
-                <label for="usn">USN / Student ID *</label>
-                <input type="text" id="usn" name="usn" placeholder="Enter numeric USN" pattern="^[0-9]+$" required>
-                <small class="text-muted">Must match the numeric USN stored in the student table.</small>
-            </div>
-
-            <div class="form-hint">
-                <h4>Need a reminder?</h4>
-                <p>Your USN can be found on your student profile. Seats are assigned on a first-come basis.</p>
-            </div>
-
-            <div class="btn-group">
-                <button type="submit" class="btn btn-success btn-block">Register Now</button>
-                <a href="/events" class="btn btn-secondary">View All Events</a>
-            </div>
-        </form>
-    </div>
 </section>
 
 <script>

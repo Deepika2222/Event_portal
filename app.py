@@ -21,8 +21,10 @@ DB_CONFIG = {
     "user": "root",
     "password": "dbms@2007",
     "database": "event_portal",
-    "autocommit": False,
-}
+    "autocommit": False,ls -a
+
+
+
 
 
 def get_db_connection():

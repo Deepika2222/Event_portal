@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}Registrations Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div>
+        <p class="text-uppercase text-muted small mb-1">Insights</p>
+        <h1 class="h3 mb-0">Registrations Dashboard</h1>
+    </div>
+    <div class="btn-group">
+        <a class="btn btn-outline-primary" href="{{ url_for('events_dashboard') }}">Events dashboard</a>
+        <a class="btn btn-outline-secondary" href="{{ url_for('export_registrations') }}">Export CSV</a>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card bg-info text-white">
+            <p class="mb-1">Showing registrations</p>
+            <h2>{{ stats.visible }}</h2>
+            <small class="text-white-50">after applied filters</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card bg-success text-white">
+            <p class="mb-1">Unique students</p>
+            <h2>{{ stats.unique_students }}</h2>
+            <small class="text-white-50">in this view</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card bg-dark text-white">
+            <p class="mb-1">Busiest event</p>
+            {% if stats.busiest_event %}
+                <h6 class="mb-0">{{ stats.busiest_event[0] }}</h6>
+                <small class="text-white-50">{{ stats.busiest_event[1] }} registrations</small>
+            {% else %}
+                <h6 class="mb-0">—</h6>
+                <small class="text-white-50">No data</small>
+            {% endif %}
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card bg-warning text-dark">
+            <p class="mb-1">Latest registration</p>
+            {% if stats.latest_registration %}
+                <h6 class="mb-0">{{ stats.latest_registration.student_name }}</h6>
+                <small class="text-muted">{{ stats.latest_registration.event_name }} &middot; {{ stats.latest_registration.registration_date }}</small>
+            {% else %}
+                <h6 class="mb-0">—</h6>
+                <small class="text-muted">No data</small>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<form class="row g-2 mb-4" method="get">
+    <div class="col-md-8">
+        <input type="text" name="q" class="form-control" placeholder="Search by student, USN, department, or event" value="{{ query }}">
+    </div>
+    <div class="col-md-4 d-flex gap-2">
+        <button class="btn btn-primary flex-fill" type="submit">Apply filter</button>
+        <a class="btn btn-outline-secondary flex-fill" href="{{ url_for('registrations_dashboard') }}">Reset</a>
+    </div>
+</form>
+
+<div class="row g-4">
+    <div class="col-lg-8">
+        <div class="card shadow-sm h-100">
+            <div class="card-header">Registrations list</div>
+            <div class="table-responsive">
+                <table class="table table-striped align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>Reg ID</th>
+                            <th>Student</th>
+                            <th>USN</th>
+                            <th>Department</th>
+                            <th>Event</th>
+                            <th>Registered at</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% if registrations %}
+                            {% for row in registrations %}
+                            <tr>
+                                <td>{{ row.reg_id }}</td>
+                                <td>{{ row.student_name }}</td>
+                                <td>{{ row.USN }}</td>
+                                <td>{{ row.department or '—' }}</td>
+                                <td>{{ row.event_name }}</td>
+                                <td>{{ row.registration_date }}</td>
+                            </tr>
+                            {% endfor %}
+                        {% else %}
+                            <tr><td colspan="6" class="text-center py-4">No registrations found.</td></tr>
+                        {% endif %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-4">
+        <div class="card shadow-sm mb-4">
+            <div class="card-header">Department distribution</div>
+            <div class="list-group list-group-flush">
+                {% if stats.per_department %}
+                    {% for dept, total in stats.per_department %}
+                    <div class="list-group-item d-flex justify-content-between">
+                        <span>{{ dept }}</span>
+                        <span class="fw-semibold">{{ total }}</span>
+                    </div>
+                    {% endfor %}
+                {% else %}
+                    <div class="list-group-item text-center text-muted">No data available.</div>
+                {% endif %}
+            </div>
+        </div>
+        <div class="card shadow-sm">
+            <div class="card-header">Tips</div>
+            <div class="card-body">
+                <p class="mb-2 small text-muted">Filter by student or event name to quickly inspect engagement.</p>
+                <p class="mb-0 small text-muted">Use the export action to share confirmed attendee lists with coordinators.</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Events{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3">Events</h1>
+</div>
+<div class="table-responsive shadow-sm">
+    <table class="table table-hover align-middle">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Date</th>
+                <th>Venue</th>
+                <th>Organizer</th>
+                <th>Seats Filled</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if events %}
+                {% for event in events %}
+                <tr>
+                    <td>{{ event.event_id }}</td>
+                    <td>
+                        <div class="fw-semibold">{{ event.name }}</div>
+                        <div class="small text-muted">{{ event.description or '' }}</div>
+                    </td>
+                    <td>{{ event.date or 'TBD' }} {{ event.time or '' }}</td>
+                    <td>{{ event.venue or 'TBA' }}</td>
+                    <td>{{ event.organizer or 'N/A' }}</td>
+                    <td>
+                        {% set filled = event.registration_count or 0 %}
+                        {% set max = event.max_seats or 0 %}
+                        {% if max > 0 %}
+                            <span class="badge bg-info text-dark">{{ filled }} / {{ max }}</span>
+                        {% else %}
+                            <span class="badge bg-secondary">{{ filled }} seats</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">
+                        <a href="{{ url_for('event_registrations', event_id=event.event_id) }}" class="btn btn-sm btn-outline-primary">Registrations</a>
+                        <a href="{{ url_for('event_feedback', event_id=event.event_id) }}" class="btn btn-sm btn-outline-secondary">Feedback</a>
+                        <form method="POST" action="{{ url_for('delete_event', event_id=event.event_id) }}" class="d-inline"
+                            onsubmit="return confirm('Delete this event?');">
+                            <button class="btn btn-sm btn-danger">Delete</button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr><td colspan="7" class="text-center py-4">No events available.</td></tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

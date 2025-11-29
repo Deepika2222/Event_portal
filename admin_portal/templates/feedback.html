@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Feedback{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <div>
+        <p class="text-uppercase text-muted small mb-1">Event</p>
+        <h1 class="h3 mb-0">{{ event.name }}</h1>
+    </div>
+    <a href="{{ url_for('events') }}" class="btn btn-outline-secondary">Back to events</a>
+</div>
+<div class="table-responsive shadow-sm">
+    <table class="table table-striped align-middle">
+        <thead>
+            <tr>
+                <th>Feedback ID</th>
+                <th>USN</th>
+                <th>Student Name</th>
+                <th>Rating</th>
+                <th>Comment</th>
+                <th>Submitted At</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% if feedback %}
+                {% for row in feedback %}
+                <tr>
+                    <td>{{ row.feedback_id }}</td>
+                    <td>{{ row.USN }}</td>
+                    <td>{{ row.student_name }}</td>
+                    <td>
+                        <span class="badge bg-warning text-dark">{{ row.rating }} / 5</span>
+                    </td>
+                    <td>{{ row.comment or '—' }}</td>
+                    <td>{{ row.submitted_at }}</td>
+                </tr>
+                {% endfor %}
+            {% else %}
+                <tr><td colspan="6" class="text-center py-4">No feedback for this event.</td></tr>
+            {% endif %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

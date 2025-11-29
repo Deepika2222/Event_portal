@@ -1,0 +1,128 @@
+{% extends "base.html" %}
+{% block title %}Events Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4 flex-wrap gap-3">
+    <div>
+        <p class="text-uppercase text-muted small mb-1">Insights</p>
+        <h1 class="h3 mb-0">Events Dashboard</h1>
+    </div>
+    <div class="btn-group">
+        <a class="btn btn-outline-primary" href="{{ url_for('events') }}">Manage events</a>
+        <a class="btn btn-outline-secondary" href="{{ url_for('export_registrations') }}">Export registrations</a>
+    </div>
+</div>
+
+<div class="row g-3 mb-4">
+    <div class="col-md-3">
+        <div class="stat-card bg-primary text-white">
+            <p class="mb-1">Total events</p>
+            <h2>{{ stats.total_events }}</h2>
+            <small class="text-white-50">{{ stats.upcoming }} upcoming</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card bg-dark text-white">
+            <p class="mb-1">Total seats</p>
+            <h2>{{ stats.total_capacity }}</h2>
+            <small class="text-white-50">capacity tracked</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card bg-success text-white">
+            <p class="mb-1">Seats filled</p>
+            <h2>{{ stats.seats_filled }}</h2>
+            <small class="text-white-50">{{ stats.avg_fill }}% occupancy</small>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card bg-warning text-dark">
+            <p class="mb-1">Avg fill rate</p>
+            <h2>{{ stats.avg_fill }}%</h2>
+            <small class="text-muted">of tracked capacity</small>
+        </div>
+    </div>
+</div>
+
+{% if highlights %}
+<div class="card shadow-sm mb-4">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>Top performing events</span>
+        <span class="text-muted small">Based on seat utilization</span>
+    </div>
+    <div class="list-group list-group-flush">
+        {% for event in highlights %}
+        <div class="list-group-item d-flex justify-content-between align-items-center flex-wrap gap-3">
+            <div>
+                <h6 class="mb-0">{{ event.name }}</h6>
+                <small class="text-muted">{{ event.date or 'TBD' }} &middot; {{ event.venue or 'Venue TBA' }}</small>
+            </div>
+            <div class="text-end">
+                <p class="mb-1 fw-semibold">{{ event.fill_percent }}% full</p>
+                <small class="text-muted">{{ event.registered }} / {{ event.max_seats or '∞' }} seats</small>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<div class="card shadow-sm">
+    <div class="card-header d-flex justify-content-between align-items-center">
+        <span>All events</span>
+        <small class="text-muted">Live seat utilization and feedback rating</small>
+    </div>
+    <div class="table-responsive">
+        <table class="table align-middle mb-0">
+            <thead>
+                <tr>
+                    <th>Event</th>
+                    <th>Date</th>
+                    <th>Venue</th>
+                    <th>Organizer</th>
+                    <th>Seats</th>
+                    <th>Rating</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% if events %}
+                    {% for event in events %}
+                    <tr>
+                        <td>
+                            <div class="fw-semibold">{{ event.name }}</div>
+                            <small class="text-muted">{{ event.description or 'No description' }}</small>
+                        </td>
+                        <td>{{ event.date or 'TBD' }} {{ event.time or '' }}</td>
+                        <td>{{ event.venue or 'TBA' }}</td>
+                        <td>{{ event.organizer or 'N/A' }}</td>
+                        <td style="min-width: 160px;">
+                            <div class="d-flex justify-content-between small text-muted">
+                                <span>{{ event.registered }}</span>
+                                <span>{{ event.max_seats or '∞' }}</span>
+                            </div>
+                            <div class="progress" style="height: 6px;">
+                                <div class="progress-bar progress-fill {% if event.fill_percent >= 90 %}bg-danger{% elif event.fill_percent >= 60 %}bg-warning{% else %}bg-success{% endif %}"
+                                    style="--progress: {{ event.fill_percent }}"></div>
+                            </div>
+                        </td>
+                        <td>
+                            {% if event.avg_rating %}
+                                <span class="badge bg-info text-dark">{{ event.avg_rating }}/5</span>
+                            {% else %}
+                                <span class="text-muted">No feedback</span>
+                            {% endif %}
+                        </td>
+                        <td>
+                            <span class="badge {% if event.status == 'Full' %}bg-danger{% else %}bg-success{% endif %}">{{ event.status }}</span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr><td colspan="7" class="text-center py-4">No events found.</td></tr>
+                {% endif %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+body {
+    background-color: #f8fafc;
+}
+
+.navbar-brand {
+    font-weight: 600;
+    letter-spacing: 0.02em;
+}
+
+.login-wrapper {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+.stat-card {
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 10px 25px rgba(15, 23, 42, 0.15);
+}
+
+.table-responsive {
+    border-radius: 0.75rem;
+    overflow: hidden;
+    background: #fff;
+}
+
+.table thead th {
+    background-color: #f1f5f9;
+    border-bottom: none;
+}
+
+.btn-outline-secondary,
+.btn-outline-primary {
+    border-width: 2px;
+}
+
+.progress-fill {
+    width: calc(var(--progress, 0) * 1%);
+    transition: width 0.4s ease;
+}
